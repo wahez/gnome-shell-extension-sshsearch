@@ -7,27 +7,27 @@ So you need a ~/.ssh/config file to use this extensions. It parses
 the config file and search for the strings after the "Host" setting.
 
 ### Installation
-* copy or link the folder "ssh-search-provider@gnome-shell-extensions.brot.github.com" to ~/.local/share/gnome-shell/extensions
+* ./autogen.sh --prefix=/usr/local && make && sudo make install
+  * Make sure you have the following packages installed:
+    * gnome-common
+    * intltool
+    * glib2-devel (Fedora), libglib2.0-dev (Ubuntu)
 * enable extension (e.g. via gnome-tweak-tool)
 
 ### Selecting Your preferred Terminal Application
-At the moment it isn't possible to configure your preferred terminal application. 
-The reason is that gnome-shell in the current stable version (3.2) don't easily allow 
-extensions to use a extension specific gsettings schema.
-But this should be possible with the next stable gnome-shell version (3.4)
+By default, this extension will use gnome-terminal as the terminal application. To change
+the terminal application (e.g. Terminator), use gsettings:
 
-At the moment you could change the default terminal app if you override the setting 
-directly in the source file:
-~/.local/share/gnome-shell/extensions/ssh-search-provider@gnome-shell-extensions.brot.github.com/extension.js
-There you could change the following line to your needs. This is the default setting:
+    gsettings set com.github.brot.sshsearch terminal-app terminator
 
-    const SSHSEARCH_TERMINAL_APP = 'gnome-terminal';
-    
-For example you could change this to 
+or
 
-    const SSHSEARCH_TERMINAL_APP = 'terminator';
-    
-if you would like to use Terminator as your terminal application
+    gsettings set com.github.brot.sshsearch terminal-app gnome-terminal
+
+To see which note application is currently configured:
+
+    gsettings get com.github.brot.sshsearch terminal-app
+
 
 ### License
 Copyright (c) 2011 Bernd Schlapsi <brot@gmx.info>

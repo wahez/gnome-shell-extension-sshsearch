@@ -21,9 +21,12 @@ const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Shell = imports.gi.Shell;
 const Util = imports.misc.util;
+const Gettext = imports.gettext.domain('gnome-shell-extension-sshsearch');
+const _ = Gettext.gettext;
 
 // Settings
-const SSHSEARCH_TERMINAL_APP = 'gnome-terminal';
+const SSHSEARCH_SETTINGS_SCHEMA = 'com.github.brot.sshsearch';
+const SSHSEARCH_TERMINAL_APP_KEY = 'terminal-app';
 
 // sshSearchProvider holds the instance of the search provider
 // implementation. If null, the extension is either uninitialized
@@ -36,6 +39,12 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
+function getSettings(schema) {
+    if (Gio.Settings.list_schemas().indexOf(schema) == -1)
+        throw _("Schema \"%s\" not found.").format(schema);
+    return new Gio.Settings({ schema: schema });
+}
+
 function SshSearchProvider() {
     this._init();
 }
@@ -46,11 +55,14 @@ SshSearchProvider.prototype = {
     _init: function(name) {
         Search.SearchProvider.prototype._init.call(this, "SSH");
         this._configFile = GLib.build_filenamev([GLib.get_home_dir(), '/.ssh/', 'config']);
+        
+        this._settings = getSettings(SSHSEARCH_SETTINGS_SCHEMA);
+        this._terminal_app = this._settings.get_string(SSHSEARCH_TERMINAL_APP_KEY).toLowerCase();
     },
 
     getResultMeta: function(resultId) {
         let appSys = Shell.AppSystem.get_default();
-        let app = appSys.lookup_app(SSHSEARCH_TERMINAL_APP + '.desktop');
+        let app = appSys.lookup_app(this._terminal_app + '.desktop');
         return { 'id': resultId,
                  'name': resultId.host,
                  'createIcon': function(size) {
@@ -60,7 +72,7 @@ SshSearchProvider.prototype = {
     },
 
     activateResult: function(id) {
-        Util.spawnCommandLine(SSHSEARCH_TERMINAL_APP + ' -e "ssh ' + id.host + '"');
+        Util.spawnCommandLine(this._terminal_app + ' -e "ssh ' + id.host + '"');
     },
 
     getInitialResultSet: function(terms) {
