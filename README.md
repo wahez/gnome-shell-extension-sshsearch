@@ -1,7 +1,6 @@
 Ssh Search Provider
 =====================
-A gnome-shell extension which searches the ssh config file and
-provides the found ssh connections in your shell overview.
+A gnome-shell extension which searches the ssh config file and the known\_hosts file and provides the found ssh connections in your shell overview.
 
 So you need a ~/.ssh/config file to use this extensions. It parses
 the config file and search for the strings after the "Host" setting.
@@ -14,6 +13,9 @@ or manually
 
  * copy or link the folder "ssh-search-provider@gnome-shell-extensions.brot.github.com" to ~/.local/share/gnome-shell/extensions
  * enable extension (e.g. via gnome-tweak-tool)
+
+### Usage
+After activating overview mode, just start typing the hostname. The hosts (from .ssh/config and .ssh/known\_hosts) matching the search term will be displayed. If the search term contains a '@', the part after the '@' will be used to search for a hostname. The part before will be used as username for the ssh connection.
 
 ### Selecting Your preferred Terminal Application
 At the moment it isn't possible to configure the preferred terminal app directly.
