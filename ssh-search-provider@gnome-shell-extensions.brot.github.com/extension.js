@@ -114,7 +114,7 @@ SshSearchProvider.prototype = {
         if (resultId.port != 22) {
             ssh_name = ssh_name + ':' + resultId.port;
         }
-        if (resultId.user.length != 0) {
+        if (resultId.user != '') {
             ssh_name = resultId.user + '@' + ssh_name
         }
         
@@ -128,7 +128,7 @@ SshSearchProvider.prototype = {
 
     activateResult: function(id) {
         let target = id.host;
-        if (id.user.length != 0) {
+        if (id.user != '') {
             target = id.user + '@' + target;
         }
         if (id.port == 22) {
@@ -152,7 +152,7 @@ SshSearchProvider.prototype = {
                     if (term_parts.length > 1) {
                         user = term_parts[0];
                     }
-                    if (hostnames[i].match(host)) {
+                    if (host != '' && hostnames[i].match(host)) {
                         host = hostnames[i];
                         let port = 22;
                         
